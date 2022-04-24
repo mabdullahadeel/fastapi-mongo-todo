@@ -1,8 +1,8 @@
-from unicodedata import name
 from fastapi import FastAPI
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import settings
+from app.api.api_v1.router import api_v1_router
 
 # Database Models
 from app.models.users.user import User
@@ -26,7 +26,5 @@ async def app_init():
         ]
     )
 
-
-from app.api.api_v1.router import api_v1_router
 
 app.include_router(api_v1_router, prefix=settings.API_V1_STR)
