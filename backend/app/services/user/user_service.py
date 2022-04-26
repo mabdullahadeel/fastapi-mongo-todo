@@ -1,10 +1,11 @@
 from typing import Optional
 from uuid import UUID
-from app.models.users.user import User
-from app.schemas.user_schema import UserAuth
-from app.core.security import get_password_hash, verify_password
-from app.schemas.user_schema import UserUpdate
+
 import pymongo
+from app.core.security import get_password_hash, verify_password
+from app.models.users.user import User
+from app.schemas.user_schema import UserAuth, UserUpdate
+
 
 class UserService:
     @staticmethod

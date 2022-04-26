@@ -1,1 +1,1 @@
-# Fullstack todo app with fast api and nextjs
+# Fullstack todo app with fastapi and nextjs
