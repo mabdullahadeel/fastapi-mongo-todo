@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, status, Body
-from pydantic import EmailStr
+from fastapi import APIRouter, HTTPException, status, Depends
 import pymongo
 from app.services.user.user_service import UserService
 from app.schemas.user_schema import UserAuth, UserOut, UserUpdate
+from app.api.deps.user_deps import get_current_user
+from app.models.users.user import User
 
 user_router = APIRouter()
 
@@ -18,24 +19,15 @@ async def create_user(data: UserAuth):
         )
 
 
-@user_router.get("/get", summary="Get user by email", response_model=UserOut)
-async def get_user_by_email(email: EmailStr):
-    try:
-        user = await UserService.get_user_by_email(email)
-        if not user:
-            raise pymongo.errors.OperationFailure("User not found")
-        return user
-    except pymongo.errors.OperationFailure:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User with this email does not exist"
-        )
-        
+@user_router.get("/me", summary="Get user by email", response_model=UserOut)
+def get_me(user: User = Depends(get_current_user)):
+    return user
 
-@user_router.put("/update", summary="Update user by email", response_model=UserOut)
-async def update_user(email: str, data: UserUpdate):
+
+@user_router.patch("/update", summary="Update user by email", response_model=UserOut)
+async def update_user(data: UserUpdate, user: User = Depends(get_current_user)):
     try:
-        return await UserService.update_user(email, data)
+        return await UserService.update_user(user.user_id, data)
     except pymongo.errors.OperationFailure:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
