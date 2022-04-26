@@ -1,3 +1,4 @@
+from datetime import datetime
 from app.core.config import settings
 from app.models.users.user import User
 from app.schemas.token_schema import TokenPayload
@@ -19,6 +20,12 @@ async def get_current_user(token: str = Depends(reuseable_oauth2)) -> User:
             token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         token_data = TokenPayload(**payload)
+        if datetime.fromtimestamp(token_data.exp) < datetime.utcnow():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token expired",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
     except (jwt.JWTError, ValidationError):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

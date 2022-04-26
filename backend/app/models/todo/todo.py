@@ -1,15 +1,15 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 from pydantic import Field
-from beanie import Document, Link
+from beanie import Document, Link, Replace, Insert, before_event, Indexed
 
 from app.models.users.user import User
 
 
 class Todo(Document):
-    todo_id: UUID = Field(default_factory=uuid4)
+    todo_id: UUID = Field(default_factory=uuid4, unique=True)
     status: bool = False
-    title: str
+    title: Indexed(str)
     description: str = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
@@ -29,6 +29,11 @@ class Todo(Document):
             return self.todo_id == other.todo_id
         return False
 
-    @property
-    def created(self) -> datetime:
-        return self.id.generation_time
+    
+    @before_event([Insert, Replace])
+    def update_updated_at(self):
+        self.updated_at = datetime.utcnow()
+    
+    class Collection:
+        name = "todos"
+    

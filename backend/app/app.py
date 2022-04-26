@@ -6,6 +6,7 @@ from app.api.api_v1.router import api_v1_router
 
 # Database Models
 from app.models.users.user import User
+from app.models.todo.todo import Todo
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -22,7 +23,8 @@ async def app_init():
     await init_beanie(
         database=db_client,
         document_models=[
-            User
+            User,
+            Todo
         ]
     )
 
