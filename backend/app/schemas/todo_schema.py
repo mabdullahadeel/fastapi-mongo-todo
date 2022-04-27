@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class TodoCreate(BaseModel):
     title: str = Field(..., title="Title", max_length=55, min_length=5)
     description: str = Field(..., title="Description", max_length=200, min_length=5)
-    status: Optional[bool] = Field(..., title="Status of todo")
+    status: Optional[bool] = Field(default=False, title="Status of todo")
 
 
 class TodoUpdate(BaseModel):

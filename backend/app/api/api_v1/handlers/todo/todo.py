@@ -1,7 +1,7 @@
 from typing import List
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from app.models.todo.todo import Todo
 from app.models.users.user import User
 from app.services.todo.todo_service import TodoService

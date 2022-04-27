@@ -25,6 +25,7 @@ class TodoService:
     async def update_todo(user: User, todo_id: UUID, data: TodoUpdate) -> Todo:
         todo = await TodoService.retrieve_todo(user, todo_id)
         await todo.update({"$set" : data.dict(exclude_unset=True)})
+        await todo.save()
         return todo
     
     @staticmethod
