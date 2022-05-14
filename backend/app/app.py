@@ -19,7 +19,7 @@ async def app_init():
     """
     initialize application services
     """
-    db_client = AsyncIOMotorClient(settings.MONGO_CONNECTION_STRING).fodoist
+    db_client = AsyncIOMotorClient(settings.MONGO_CONNECTION_STRING).fodoistPrep
     await init_beanie(
         database=db_client,
         document_models=[
