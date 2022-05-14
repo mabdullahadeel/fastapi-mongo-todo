@@ -17,7 +17,7 @@ const ThemeToggeler = ({ showLabel = false, ...rest }) => {
         isDisabled={false}
         isLoading={false}
         value={colorMode}
-        colorScheme={colorMode === "dark" ? "blue" : "teal"}
+        colorScheme="green"
         variant="ghost"
         mr={2}
         onChange={toggleColorMode}

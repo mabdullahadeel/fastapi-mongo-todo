@@ -11,6 +11,7 @@ import { Spinner, Flex } from "@chakra-ui/react";
 import { PublicRoute } from "./components/Auth/PublicRoute";
 import { Authenticated } from "./components/Auth/Authenticated";
 import { Navbar } from "./components/Navbar/Navbar";
+import { TodoList } from "./components/Todo/TodoList";
 
 function App() {
   return (
@@ -57,7 +58,7 @@ function App() {
                       index
                       element={
                         <Authenticated>
-                          <h1>Home</h1>
+                          <TodoList />
                         </Authenticated>
                       }
                     />
