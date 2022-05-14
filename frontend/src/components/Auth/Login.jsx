@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Flex,
   Heading,
@@ -6,13 +7,17 @@ import {
   useColorModeValue,
   FormControl,
   FormErrorMessage,
+  Text,
 } from "@chakra-ui/react";
 import ThemeToggeler from "../Theme/ThemeToggler";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../hooks/useAuth";
 
 function Login() {
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const {
     handleSubmit,
@@ -20,14 +25,17 @@ function Login() {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  function onSubmit(values) {
-    return new Promise((resolve) => {
+  const onSubmit = async (values) => {
+    setError("");
+    try {
+      await login(values.email, values.password);
+    } catch (error) {
+      setError("Invalid email or password");
       setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      }, 3000);
-    });
-  }
+        setError("");
+      }, 2000);
+    }
+  };
 
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
@@ -39,6 +47,7 @@ function Login() {
         rounded={6}
       >
         <Heading mb={6}>Login</Heading>
+        {error && <Text color="red.400">{error}</Text>}
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={errors.email}>
             <Input

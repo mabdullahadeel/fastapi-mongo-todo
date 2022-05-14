@@ -93,14 +93,14 @@ export const AuthProvider = (props) => {
   }, []);
 
   const getTokens = async (email, password) => {
+    const formData = new FormData();
+    formData.append("username", email);
+    formData.append("password", password);
     try {
-      const response = await axiosInstance.get("/auth/login", {
-        email,
-        password,
-      });
+      const response = await axiosInstance.post("/auth/login", formData);
       setSession(response.data.access_token, response.data.refresh_token);
     } catch (error) {
-      throw new Error(error);
+      throw error;
     }
   };
 
@@ -115,7 +115,9 @@ export const AuthProvider = (props) => {
           user,
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      return Promise.reject(error);
+    }
   };
 
   const logout = () => {
@@ -127,7 +129,6 @@ export const AuthProvider = (props) => {
     <AuthContext.Provider
       value={{
         ...state,
-        method: "JWT",
         login,
         logout,
       }}
