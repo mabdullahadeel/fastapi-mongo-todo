@@ -3,6 +3,8 @@ import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import { AuthProvider, AuthConsumer } from "./context/JWTAuthContext";
 import { Spinner, Flex } from "@chakra-ui/react";
+import { PublicRoute } from "./components/Auth/PublicRoute";
+import { Authenticated } from "./components/Auth/Authenticated";
 
 function App() {
   return (
@@ -27,11 +29,31 @@ function App() {
                 </Flex>
               ) : (
                 <Routes path="/">
-                  {/* Auth */}
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  {/* Application */}
-                  <Route index element={<h1>Home</h1>} />
+                  <Route
+                    path="/login"
+                    element={
+                      <PublicRoute>
+                        <Login />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/register"
+                    element={
+                      <PublicRoute>
+                        <Register />
+                      </PublicRoute>
+                    }
+                  />
+                  {/* Authenticated Routes */}
+                  <Route
+                    index
+                    element={
+                      <Authenticated>
+                        <h1>Home</h1>
+                      </Authenticated>
+                    }
+                  />
                 </Routes>
               )
             }

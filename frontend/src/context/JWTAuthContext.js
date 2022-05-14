@@ -1,7 +1,7 @@
 import { createContext, useEffect, useReducer } from "react";
 import axiosInstance from "../services/axios";
 import { validateToken } from "../utils/jwt";
-import { setSession } from "../utils/session";
+import { setSession, resetSession } from "../utils/session";
 
 const initialState = {
   isAuthenticated: false,
@@ -9,7 +9,7 @@ const initialState = {
   user: null,
 };
 
-const AuthContext = createContext({
+export const AuthContext = createContext({
   ...initialState,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
@@ -92,18 +92,34 @@ export const AuthProvider = (props) => {
     initialize();
   }, []);
 
-  const login = async (user) => {
-    dispatch({
-      type: "LOGIN",
-      payload: {
-        user,
-      },
-    });
+  const getTokens = async (email, password) => {
+    try {
+      const response = await axiosInstance.get("/auth/login", {
+        email,
+        password,
+      });
+      setSession(response.data.access_token, response.data.refresh_token);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const login = async (email, password) => {
+    try {
+      await getTokens(email, password);
+      const response = await axiosInstance.get("/users/me");
+      const { data: user } = response;
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          user,
+        },
+      });
+    } catch (error) {}
   };
 
   const logout = () => {
-    setSession(null);
-    localStorage.removeItem("refreshToken");
+    resetSession();
     dispatch({ type: "LOGOUT" });
   };
 
