@@ -5,13 +5,30 @@ import {
   Button,
   Input,
   useColorModeValue,
+  FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import ThemeToggeler from "../Theme/ThemeToggler";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 function Login() {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
+  function onSubmit(values) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        alert(JSON.stringify(values, null, 2));
+        resolve();
+      }, 3000);
+    });
+  }
 
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
@@ -23,38 +40,58 @@ function Login() {
         rounded={6}
       >
         <Heading mb={6}>Login</Heading>
-        <Input
-          placeholder="Email"
-          background={useColorModeValue("gray.300", "gray.600")}
-          type="email"
-          variant="filled"
-          size="lg"
-          mb={6}
-        />
-        <Input
-          placeholder="Password"
-          background={useColorModeValue("gray.300", "gray.600")}
-          type="password"
-          variant="filled"
-          size="lg"
-          mb={6}
-        />
-        <Button
-          isLoading={loading}
-          loadingText="Logging in..."
-          width="100%"
-          colorScheme="green"
-          variant="outline"
-          mb={6}
-        >
-          Login
-        </Button>
-        <ThemeToggeler mb={6} showLabel={true} />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl isInvalid={errors.email}>
+            <Input
+              placeholder="Email"
+              background={useColorModeValue("gray.300", "gray.600")}
+              type="email"
+              variant="filled"
+              size="lg"
+              mt={6}
+              {...register("email", {
+                required: "This filed is required",
+              })}
+            />
+            <FormErrorMessage>
+              {errors.email && errors.email.message}
+            </FormErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={errors.password}>
+            <Input
+              placeholder="Password"
+              background={useColorModeValue("gray.300", "gray.600")}
+              type="password"
+              variant="filled"
+              size="lg"
+              mt={6}
+              {...register("password", {
+                required: "This filed is required",
+              })}
+            />
+            <FormErrorMessage>
+              {errors.password && errors.password.message}
+            </FormErrorMessage>
+          </FormControl>
+          <Button
+            isLoading={isSubmitting}
+            loadingText="Logging in..."
+            width="100%"
+            colorScheme="green"
+            variant="outline"
+            mt={6}
+            mb={6}
+            type="submit"
+          >
+            Login
+          </Button>
+        </form>
+        <ThemeToggeler showLabel={true} />
         <Button
           width="100%"
           colorScheme="gray"
           variant="outline"
-          mb={6}
+          mt={6}
           onClick={() => navigate("/register", { replace: true })}
         >
           Register Instead

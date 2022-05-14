@@ -23,39 +23,41 @@ function Register() {
         rounded={6}
       >
         <Heading mb={6}>Register</Heading>
-        <Input
-          placeholder="Email"
-          background={useColorModeValue("gray.300", "gray.600")}
-          type="email"
-          variant="filled"
-          size="lg"
-          mb={6}
-        />
-        <Input
-          placeholder="username"
-          background={useColorModeValue("gray.300", "gray.600")}
-          type="text"
-          variant="filled"
-          size="lg"
-          mb={6}
-        />
-        <Input
-          placeholder="Password"
-          background={useColorModeValue("gray.300", "gray.600")}
-          type="password"
-          variant="filled"
-          size="lg"
-          mb={6}
-        />
-        <Button
-          isLoading={isLoading}
-          width="100%"
-          colorScheme="green"
-          variant="outline"
-          mb={6}
-        >
-          Register
-        </Button>
+        <form>
+          <Input
+            placeholder="Email"
+            background={useColorModeValue("gray.300", "gray.600")}
+            type="email"
+            variant="filled"
+            size="lg"
+            mb={6}
+          />
+          <Input
+            placeholder="username"
+            background={useColorModeValue("gray.300", "gray.600")}
+            type="text"
+            variant="filled"
+            size="lg"
+            mb={6}
+          />
+          <Input
+            placeholder="Password"
+            background={useColorModeValue("gray.300", "gray.600")}
+            type="password"
+            variant="filled"
+            size="lg"
+            mb={6}
+          />
+          <Button
+            isLoading={isLoading}
+            width="100%"
+            colorScheme="green"
+            variant="outline"
+            mb={6}
+          >
+            Register
+          </Button>
+        </form>
         <ThemeToggeler mb={6} showLabel={true} />
         <Button
           width="100%"
