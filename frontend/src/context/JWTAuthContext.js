@@ -5,7 +5,7 @@ import { setSession } from "../utils/session";
 
 const initialState = {
   isAuthenticated: false,
-  isInitalized: true,
+  isInitialized: false,
   user: null,
 };
 
@@ -22,7 +22,7 @@ const handlers = {
     return {
       ...state,
       isAuthenticated,
-      isInitalized: true,
+      isInitialized: true,
       user,
     };
   },
