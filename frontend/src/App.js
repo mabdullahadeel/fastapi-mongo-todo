@@ -10,6 +10,7 @@ import { AuthProvider, AuthConsumer } from "./context/JWTAuthContext";
 import { Spinner, Flex } from "@chakra-ui/react";
 import { PublicRoute } from "./components/Auth/PublicRoute";
 import { Authenticated } from "./components/Auth/Authenticated";
+import { Navbar } from "./components/Navbar/Navbar";
 
 function App() {
   return (
@@ -51,14 +52,16 @@ function App() {
                     }
                   />
                   {/* Authenticated Routes */}
-                  <Route
-                    index
-                    element={
-                      <Authenticated>
-                        <h1>Home</h1>
-                      </Authenticated>
-                    }
-                  />
+                  <Route path="/" element={<Navbar />}>
+                    <Route
+                      index
+                      element={
+                        <Authenticated>
+                          <h1>Home</h1>
+                        </Authenticated>
+                      }
+                    />
+                  </Route>
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               )
