@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Flex,
   Heading,
@@ -7,7 +6,7 @@ import {
   useColorModeValue,
   FormControl,
   FormErrorMessage,
-  Text,
+  useToast,
 } from "@chakra-ui/react";
 import ThemeToggeler from "../Theme/ThemeToggler";
 import { useNavigate } from "react-router-dom";
@@ -15,9 +14,9 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 
 function Login() {
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
+  const toast = useToast();
 
   const {
     handleSubmit,
@@ -26,14 +25,15 @@ function Login() {
   } = useForm();
 
   const onSubmit = async (values) => {
-    setError("");
     try {
       await login(values.email, values.password);
     } catch (error) {
-      setError("Invalid email or password");
-      setTimeout(() => {
-        setError("");
-      }, 2000);
+      toast({
+        title: `Invalid email or password`,
+        status: "error",
+        isClosable: true,
+        duration: 1500,
+      });
     }
   };
 
@@ -47,7 +47,6 @@ function Login() {
         rounded={6}
       >
         <Heading mb={6}>Login</Heading>
-        {error && <Text color="red.400">{error}</Text>}
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={errors.email}>
             <Input
