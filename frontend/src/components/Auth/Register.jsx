@@ -6,13 +6,16 @@ import {
   useColorModeValue,
   FormControl,
   FormErrorMessage,
+  useToast,
 } from "@chakra-ui/react";
 import ThemeToggeler from "../Theme/ThemeToggler";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axiosInstance from "../../services/axios";
 
 function Register() {
   const navigate = useNavigate();
+  const toast = useToast();
 
   const {
     handleSubmit,
@@ -21,12 +24,25 @@ function Register() {
   } = useForm();
 
   function onSubmit(values) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      }, 3000);
-    });
+    axiosInstance
+      .post("/users/create", values)
+      .then((res) => {
+        toast({
+          title: "Account created successfully.",
+          status: "success",
+          isClosable: true,
+          duration: 1500,
+        });
+        navigate("/login", { replace: true });
+      })
+      .catch((error) => {
+        toast({
+          title: `${error.response.data.detail}`,
+          status: "error",
+          isClosable: true,
+          duration: 1500,
+        });
+      });
   }
 
   return (
@@ -106,6 +122,7 @@ function Register() {
           </FormControl>
           <Button
             isLoading={isSubmitting}
+            loadingText="Creating account..."
             width="100%"
             colorScheme="green"
             variant="outline"

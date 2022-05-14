@@ -6,8 +6,8 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (_error) => {
-    Promise.reject("Something went wrong with the request");
+  (error) => {
+    return Promise.reject(error);
   }
 );
 
