@@ -1,12 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  Button,
-  Container,
-  Spinner,
-  Flex,
-  Center,
-  Box,
-} from "@chakra-ui/react";
+import { Container, Spinner, Center, Box } from "@chakra-ui/react";
 import { AddTodoModal } from "./AddTodoModal";
 import axiosInstance from "../../services/axios";
 import { TodoCard } from "./TodoCard";
