@@ -12,6 +12,7 @@ import { PublicRoute } from "./components/Auth/PublicRoute";
 import { Authenticated } from "./components/Auth/Authenticated";
 import { Navbar } from "./components/Navbar/Navbar";
 import { TodoList } from "./components/Todo/TodoList";
+import { TodoDetail } from "./components/Todo/TodoDetail";
 
 function App() {
   return (
@@ -59,6 +60,14 @@ function App() {
                       element={
                         <Authenticated>
                           <TodoList />
+                        </Authenticated>
+                      }
+                    />
+                    <Route
+                      path="/:todoId"
+                      element={
+                        <Authenticated>
+                          <TodoDetail />
                         </Authenticated>
                       }
                     />

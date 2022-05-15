@@ -17,29 +17,42 @@ import {
   useToast,
   Switch,
   FormLabel,
+  Box,
 } from "@chakra-ui/react";
 import { useForm, Controller } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import axiosInstance from "../../services/axios";
 
-export const AddTodoModal = () => {
+export const AddTodoModal = ({
+  editable = false,
+  defaultValues = {},
+  onSuccess = () => {},
+  ...rest
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const { todoId } = useParams();
   const {
     handleSubmit,
     register,
     control,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({ defaultValues: { ...defaultValues } });
 
   const onSubmit = async (values) => {
     try {
-      await axiosInstance.post("/todo/", values);
+      if (editable) {
+        await axiosInstance.put(`/todo/${todoId}`, values);
+      } else {
+        await axiosInstance.post("/todo/", values);
+      }
       toast({
-        title: `Todo added`,
+        title: editable ? "todo updated" : `Todo added`,
         status: "success",
         isClosable: true,
         duration: 1500,
       });
+      onSuccess();
       onClose();
     } catch (error) {
       console.log(error);
@@ -53,7 +66,7 @@ export const AddTodoModal = () => {
   };
 
   return (
-    <>
+    <Box {...rest}>
       <Button w="100%" colorScheme="green" onClick={onOpen}>
         ADD FODO
       </Button>
@@ -67,7 +80,7 @@ export const AddTodoModal = () => {
         <ModalOverlay />
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalContent>
-            <ModalHeader>Add FODO</ModalHeader>
+            <ModalHeader>{editable ? "Update FODO" : "ADD FODO"}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <FormControl isInvalid={errors.title}>
@@ -149,15 +162,15 @@ export const AddTodoModal = () => {
                   colorScheme="green"
                   type="submit"
                   isLoading={isSubmitting}
-                  loadingText="Creating"
+                  loadingText={editable ? "Updating" : "Creating"}
                 >
-                  Done
+                  {editable ? "Update" : "Create"}
                 </Button>
               </Stack>
             </ModalFooter>
           </ModalContent>
         </form>
       </Modal>
-    </>
+    </Box>
   );
 };

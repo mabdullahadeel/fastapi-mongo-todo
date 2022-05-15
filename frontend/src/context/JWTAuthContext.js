@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer, useRef } from "react";
 import axiosInstance from "../services/axios";
 import { validateToken } from "../utils/jwt";
 import { setSession, resetSession } from "../utils/session";
@@ -49,9 +49,12 @@ const reducer = (state, action) =>
 
 export const AuthProvider = (props) => {
   const { children } = props;
+  const isMounted = useRef(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    if (isMounted.current) return;
+
     const initialize = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
@@ -90,6 +93,7 @@ export const AuthProvider = (props) => {
       }
     };
     initialize();
+    isMounted.current = true;
   }, []);
 
   const getTokens = async (email, password) => {
