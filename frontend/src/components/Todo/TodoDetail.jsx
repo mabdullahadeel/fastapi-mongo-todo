@@ -7,6 +7,7 @@ import {
   Spinner,
   Badge,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../services/axios";
@@ -18,6 +19,7 @@ export const TodoDetail = () => {
   const isMounted = useRef(false);
   const { todoId } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
   const background = useColorModeValue("gray.300", "gray.600");
 
   useEffect(() => {
@@ -39,6 +41,32 @@ export const TodoDetail = () => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const deleteTodo = () => {
+    setLoading(true);
+    axiosInstance
+      .delete(`/todo/${todoId}`)
+      .then(() => {
+        toast({
+          title: "Todo deleted",
+          description: "Todo has been deleted",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        navigate("/");
+      })
+      .catch((err) => {
+        toast({
+          title: "Could'nt delete todo",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
   };
 
   if (loading || !todo) {
@@ -93,6 +121,14 @@ export const TodoDetail = () => {
           }}
           onSuccess={fetchTodo}
         />
+        <Button
+          isLoading={loading}
+          colorScheme="red"
+          width="100%"
+          onClick={deleteTodo}
+        >
+          Delete
+        </Button>
       </Container>
     </>
   );

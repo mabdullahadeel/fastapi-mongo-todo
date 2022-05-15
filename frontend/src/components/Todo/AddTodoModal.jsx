@@ -68,7 +68,7 @@ export const AddTodoModal = ({
   return (
     <Box {...rest}>
       <Button w="100%" colorScheme="green" onClick={onOpen}>
-        ADD FODO
+        {editable ? "UPDATE FODO" : "ADD FODO"}
       </Button>
       <Modal
         closeOnOverlayClick={false}
